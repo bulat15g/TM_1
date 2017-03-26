@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "cstdlib"
 using namespace std;
 
 /**
@@ -85,8 +86,11 @@ string myMT(vector<Q>base,string input){
         if(true){
             tek_command=find_command(base,tek_condition,input[tek_index]);
             if(tek_command==-1){
-                cout<<"программа определена неоднозначно,попробуйте еще раз ";
+                cout<<"состояние "<<tek_condition <<"символ "<<input[tek_index-1]<<"{"<<input[tek_index]<<"}"<<input[tek_index+1]
+                    <<"  программа определена неоднозначно";
+                cout<<endl<<input;
                 exit(EXIT_FAILURE);
+
             }
         }
         //cout<<tek_command<<" com "<<move(base,tek_index,tek_command)<<" mov "<<tek_index<<" cond "<<tek_condition;
@@ -102,7 +106,4 @@ string myMT(vector<Q>base,string input){
     cout<<"программа успешно завершилась,результат:"<<endl<<input;
     return input;
 }
-
-
-
 

@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#define N 10
+#define N 15
 #include "prog.h"
+
 using namespace std;
 vector<string>variables;
 /**
@@ -36,17 +37,37 @@ void show(vector<Q> test){
 
 /**
  * заполнение вхоного слова
- * @return
+ * позволяет вписать/считать нужное слово
+ * @return string вводимое слово
  */
 string fillinput(){
-    cout<<"введите слово\n";
+    cout<<"введите слово ,если считать с фаила то ' ~ ' \n";
     string ci;
-    cin>>ci;
-    string begin="*";
-    string end="______________";
-    string ret=begin+ci+end;
-    cout<<"слово="<<ret;
-    return ret;
+
+    if(ci=="~"){
+        ifstream fin("word1");
+        if(fin.fail()){
+            cout<<"фаил не найден,идите учитсья\n";
+            return "*___";
+        }
+        string reading_word;
+        fin>>reading_word;
+        string begin = "*";
+        string end = "______________";
+        string ret = begin + reading_word + end;
+        cout << "слово=" << ret;
+        fin.close();
+        return ret;
+
+    }
+    else {
+        cin >> ci;
+        string begin = "*";
+        string end = "______________";
+        string ret = begin + ci + end;
+        cout << "слово=" << ret;
+        return ret;
+    }
 }
 
 /**
@@ -93,6 +114,7 @@ vector <Q> read(){
     ifstream fin("input");
     if(fin.fail()){
         cout<<"фаил не найден,идите учитсья\n";
+        fin.close();
         return buff;
     }
     while(!fin.eof()){
@@ -101,6 +123,7 @@ vector <Q> read(){
         buff.push_back(test);
     }
     buff.pop_back();
+    fin.close();
     return buff;
 }
 
@@ -134,7 +157,7 @@ void out(vector<Q>buff){
  * @param alpabet
  */
 void dialogue(vector<Q> *program,string *input,char alpabet[N],string *output){
-    cout<<"выберите одно (a-read&start prog) (b-write&start prog):-  ";
+    cout<<"вы проверили афавит?\nвыберите одно (a-считать вручную&запустить мт) \n(b-считать&запустить):-  ";
     char a;cin>>a;
     switch (a){
         case 'a':{
@@ -149,6 +172,9 @@ void dialogue(vector<Q> *program,string *input,char alpabet[N],string *output){
         case 'b':{
             *program=read();
             show(*program);
+            *input=fillinput();
+            *input=check(*input,*program,alpabet,&variables);
+            *output=myMT(*program,*input);
             out(*program);
             break;
         }
@@ -159,7 +185,10 @@ void dialogue(vector<Q> *program,string *input,char alpabet[N],string *output){
 int main()
 {
     string input,output;
-    char alpabet[N]={'a','b','c','#','_',' ','*','l','r','s'};
+    char alpabet[N]={
+            '0','1','a','b','c','d',
+            '$','_',' ','*','l','r',
+            's','f','g'};
     vector<Q> program;
 
     dialogue(&program,&input,alpabet,&output);
